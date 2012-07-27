@@ -2,7 +2,7 @@
 require File.expand_path('../application', __FILE__)
 
 # ArchivesSpace Configuration
-ARCHIVES_SPACE_SKIN = "default"
+ARCHIVES_SPACE_THEME = "default"
 
 # Initialize the rails application
 ArchivesSpace::Application.initialize!

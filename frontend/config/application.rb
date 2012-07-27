@@ -58,5 +58,10 @@ module ArchivesSpace
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    
+    # add our theme to the asset folders
+    config.assets.paths << Rails.root.join('config', 'themes', 'redness')
+    config.assets.precompile += ['theme.less']
+    
   end
 end

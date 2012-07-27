@@ -1,0 +1,18 @@
+@import "twitter/bootstrap/variables";
+@import "twitter/bootstrap/mixins";
+
+@iconSpritePath: asset-path('twitter/bootstrap/glyphicons-halflings.png');
+@iconWhiteSpritePath: asset-path('twitter/bootstrap/glyphicons-halflings-white.png');
+
+/* Navbar Styles */
+@navbarBackground: #f00;
+@navbarBackgroundHighlight: #f33;
+
+body {
+  background-color: #FDD;
+}
+
+body > .container {
+  background-color: white;
+  padding: 0 10px;
+}
