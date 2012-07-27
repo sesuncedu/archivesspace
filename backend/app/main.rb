@@ -77,7 +77,17 @@ class ArchivesSpaceService < Sinatra::Base
   end
 
   error Sequel::ValidationFailed do
-    json_response({:error => request.env['sinatra.error'].errors}, 409)
+    error = {}
+
+    request.env['sinatra.error'].errors.each do|k,v|
+      if k.is_a? Array
+        k = k.reject {|col| col.to_s =~ /^db_/}
+      end
+
+      error[k] = v
+    end
+
+    json_response({:error => error}, 409)
   end
 
   error Sequel::DatabaseError do
@@ -124,6 +134,20 @@ class ArchivesSpaceService < Sinatra::Base
 
   helpers do
 
+    def coerce(type, val)
+      if type == Integer
+        Integer(val)
+      elsif type.is_a? Array
+        if val.is_a? Array
+          val.map {|elt| coerce(type[0], elt)}
+        else
+          raise ArgumentError.new
+        end
+      else
+        val
+      end
+    end
+
     def ensure_params(required_params)
       required_params = required_params[0]
 
@@ -136,7 +160,7 @@ class ArchivesSpaceService < Sinatra::Base
 
           if opts[:type]
             begin
-              params[parameter] = (opts[:type] == Integer) ? Integer(params[parameter]) : params[parameter]
+              params[parameter] = coerce(opts[:type], params[parameter])
             rescue ArgumentError
               bad_type << parameter
             end

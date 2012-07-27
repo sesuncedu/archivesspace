@@ -74,4 +74,44 @@ describe 'Accession controller' do
     acc["accession_id_1"].should eq("5678")
   end
 
+
+  it "supports soft deletes" do
+    post "/accession", params = {
+      :accession => JSON({
+                           "accession_id_0" => "1234",
+                           "title" => "The accession title",
+                           "content_description" => "The accession description",
+                           "condition_description" => "The condition description",
+                           "accession_date" => "2012-05-03",
+                         }),
+      :repo_id => @repo
+    }
+
+    last_response.should be_ok
+    created = JSON(last_response.body)
+
+
+    # Soft delete it
+    post "/accession", params = {
+      :operation => "delete",
+      :id => [created["id"]]
+    }
+
+    last_response.should be_ok
+
+    get "/accession/#{created["id"]}"
+    last_response.should_not be_ok
+
+    # Undelete it
+    post "/accession", params = {
+      :operation => "undelete",
+      :id => [created["id"]]
+    }
+
+    last_response.should be_ok
+
+    get "/accession/#{created["id"]}"
+    last_response.should be_ok
+  end
+
 end

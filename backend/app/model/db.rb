@@ -4,7 +4,7 @@ class DB
     if not @pool
       @pool = Sequel.connect(AppConfig::DB_URL,
                              :max_connections => AppConfig::DB_MAX_CONNECTIONS,
-                             # :loggers => [Logger.new($stderr)]
+                             :loggers => [Logger.new($stderr)]
                              )
     end
   end

@@ -18,7 +18,20 @@ class ArchivesSpaceService < Sinatra::Base
 
 
   post '/accession', :operation => :delete do
-    "Deleting: #{params.inspect}"
+    ensure_params ["id" => {:doc => "The accession ID(s) to delete", :type => [Integer]}]
+
+    Accession.soft_delete(params[:id])
+
+    json_response({:status => "Deleted", :ids => params[:id]})
+  end
+
+
+  post '/accession', :operation => :undelete do
+    ensure_params ["id" => {:doc => "The accession ID(s) to undelete", :type => [Integer]}]
+
+    Accession.undelete(params[:id])
+
+    json_response({:status => "Undeleted", :ids => params[:id]})
   end
 
 
@@ -40,7 +53,7 @@ class ArchivesSpaceService < Sinatra::Base
 
     repo = Repository[params[:repo_id]]
 
-    Accession.all.collect {|acc| acc.values}.to_json
+    Accession.filter(:db_deleted => 0).collect {|acc| acc.values}.to_json
   end
 
 

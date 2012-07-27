@@ -93,6 +93,7 @@ Sequel.migration do
 
       DateTime :accession_date, :null => false
 
+      Integer :db_deleted, :default => 0
       DateTime :create_time, :null => false
       DateTime :last_modified, :null => false
     end
@@ -103,7 +104,8 @@ Sequel.migration do
       add_index [:accession_id_0,
                  :accession_id_1,
                  :accession_id_2,
-                 :accession_id_3],
+                 :accession_id_3,
+                 :db_deleted],
       :unique => true,
       :name => "unique_acc_id"
     end
